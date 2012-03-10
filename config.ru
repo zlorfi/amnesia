@@ -2,7 +2,7 @@ $LOAD_PATH << File.dirname(__FILE__) + "/lib"
 
 require 'rubygems'
 require 'bundler/setup'
-require 'lib/amnesia'
+require 'amnesia'
 
 # This stops invalid US-ASCII characters on heroku.
 if defined? Encoding
