@@ -4,7 +4,6 @@ require 'haml'
 
 
 require 'amnesia/host'
-require 'amnesia/pie'
 require 'core_ext/array'
 
 module Amnesia
@@ -31,7 +30,7 @@ module Amnesia
         <script>
             $(function () {
                 var r = new Raphael("#{holder}", 120, 120),
-                    pie = r.piechart(60, 60, 50, [#{data.join(",")}], {colors:["#FF0000","#006699"]});
+                    pie = r.piechart(60, 60, 50, [#{data.join(",")}], {colors:["#fee9ca","#ee9900"]});
 
                 pie.hover(function () {
                     this.sector.stop();
