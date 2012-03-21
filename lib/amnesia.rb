@@ -1,10 +1,10 @@
 require 'sinatra'
 require 'dalli'
-require 'gchart'
 require 'haml'
 
 
 require 'amnesia/host'
+require 'amnesia/pie'
 require 'core_ext/array'
 
 module Amnesia
@@ -13,7 +13,7 @@ module Amnesia
   end
   
   class Application < Sinatra::Base
-    set :public, File.join(File.dirname(__FILE__), 'amnesia', 'public')
+    set :public_folder, File.join(File.dirname(__FILE__), 'amnesia', 'public')
     set :views, File.join(File.dirname(__FILE__), 'amnesia', 'views')
 
     def initialize(app, configuration = {})
@@ -26,8 +26,25 @@ module Amnesia
     end
     
     helpers do
-      def graph_url(data = [])
-        GChart.pie(:data => data, :size => '115x115').to_url
+      def graph_url(data = [], holder = {})
+        js =<<CODE
+        <script>
+            $(function () {
+                var r = new Raphael("#{holder}", 120, 120),
+                    pie = r.piechart(60, 60, 50, [#{data.join(",")}], {colors:["#FF0000","#006699"]});
+
+                pie.hover(function () {
+                    this.sector.stop();
+                    this.sector.scale(1.1, 1.1, this.cx, this.cy);
+
+                }, function () {
+                    this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
+
+                });
+            });
+
+        </script>
+CODE
       end
       
       def number_to_human_size(size, precision=1)
